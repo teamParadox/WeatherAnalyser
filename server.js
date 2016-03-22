@@ -1,5 +1,4 @@
 var http = require("http");
-var url = require("url");
 
 
 function start(router, handler) {
