@@ -1,6 +1,5 @@
 var http = require("http");
-var url = require("url");
-
+console.log("Try to start server.")
 
 function start(router, handler) {
     http.createServer(function (request, response) {
