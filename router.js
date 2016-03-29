@@ -1,8 +1,11 @@
-function route(handler, response) {
-    response.writeHead(200, {
-        'Content-Type': 'text/html; charset=utf8',
-        'Cache-Control': 'no-cache'
-    });
-    response.end(handler.handle());
+function route(handle, pathname, request, response) {
+    if (typeof handle[pathname] === 'function') {
+        handle[pathname](request, response);
+    } else {
+        console.log("No request handler found for " + pathname);
+        response.writeHead(404, {"Content-Type": "text/html"});
+        response.write("404 Not found");
+        response.end();
+    }
 }
 exports.route = route;

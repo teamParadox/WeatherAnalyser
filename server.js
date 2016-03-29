@@ -1,11 +1,14 @@
 var http = require("http");
-console.log("Try to start server.")
+var url = require("url");
 
-function start(router, handler) {
-    http.createServer(function (request, response) {
-        router.route(handler,response);
-    }).listen(8083);
+function start(route, handle) {
 
+    function onRequest(request, response) {
+        var pathname = url.parse(request.url).pathname;
+        route(handle, pathname, request, response);
+    }
+
+    http.createServer(onRequest).listen(8083);
     console.log("Server has started.");
 }
 
