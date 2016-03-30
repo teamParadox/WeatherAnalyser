@@ -1,4 +1,5 @@
 var fs = require("fs");
+var parser = require('./parser');
 var index = fs.readFileSync('./index.html');
 
 function main(request, response) {
@@ -10,9 +11,15 @@ function main(request, response) {
 
 function show(request, response) {
     console.log("Request handler 'show' was called.");
-    response.writeHead(200, {"Content-Type": "text/html}"});
-    response.write("Tuta budem dejstvovat'");
+    var resp = parser.show();
+    console.log(resp); //надо как-то блокировать. не успевает выполнить ф-ция show.
+    response.writeHead(200, {"Content-Type": "text/html"});
     response.end();
+}
+
+function sleep(milliSeconds) {
+    var startTime = new Date().getTime();
+    while (new Date().getTime() < startTime + milliSeconds);
 }
 
 exports.main = main;
