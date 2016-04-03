@@ -1,20 +1,28 @@
 var fs = require("fs");
 var parser = require('./parser');
 var index = fs.readFileSync('./index.html');
+var htmlData = "EMPTY";
+
+parser.show(function (error, data) {
+    if (error != null) {
+        htmlData = "Server unavailable";
+    }
+    if (data != null) {
+        htmlData = data;
+    }
+});
 
 function main(request, response) {
     console.log("Request handler 'main' was called.");
-    response.writeHead(200, {"Content-Type": "text/html}"});
+    response.writeHead(200, {"Content-Type": "text/html;charset=utf-8"});
     response.write("In main");
     response.end();
 }
 
 function show(request, response) {
     console.log("Request handler 'show' was called.");
-    var resp = parser.show();
-    console.log(resp); //надо как-то блокировать. не успевает выполнить ф-ция show.
-    response.writeHead(200, {"Content-Type": "text/html"});
-    response.end();
+    response.writeHead(200, {"Content-Type": "text/html; charset=utf-8"});
+    response.end(htmlData);
 }
 
 function sleep(milliSeconds) {
