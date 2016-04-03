@@ -1,4 +1,5 @@
 var request = require("request");
+var cheerio = require("cheerio");
 
 function Wheather(dayNumber, daySymbol, dayTemp, nightTemp) {
     this.dayNumber = dayNumber;
@@ -7,15 +8,24 @@ function Wheather(dayNumber, daySymbol, dayTemp, nightTemp) {
     this.nightTemp = nightTemp;
 }
 
-function show() {
-    var url = "http://meteo.by/grodno/";
-    var regExpExt = new RegExp("date\"><strong>([0-9]*).*<\\/strong><span>([а-я]*).*?ночь.*?<nobr>(.*?)<.*день.*?<nobr>(.*?)<", "igm");
-    var regExp = new RegExp("date\"><strong>([0-9]*).*<\\/strong><span>([а-я]*).*?");
-    request(url, function (error, response, body) {
-        if (!error) {
-            var result = body.match(regExp);
-            var wheather = new Wheather(result[1], result[2], 1, 2);
-            return collectStringInTable(wheather);
+function show(callback) {
+    var conf = {
+        url: "http://6.pogoda.by/26825",
+    };
+    request(conf, function (err, res, body) {
+        if (err) {
+            callback(err, null);
+        }
+        else {
+            console.log(body);
+            $ = cheerio.load(body);
+            var dayWeather = [];
+            var content = $('#forecast tr');
+            console.log(content.html());
+            //.each(function () {
+            //dayWeather.push({
+            //});
+            callback(null,content.html());
         }
     });
 }
