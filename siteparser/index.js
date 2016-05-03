@@ -1,3 +1,12 @@
-/**
- * Created by root on 3.5.16.
- */
+var express = require('express');
+var app = express();
+var parser = require('./parser');
+
+app.get('/', function (req, res) {
+    parser.updateInformation(res);
+    res.send('Reading data complete!');
+});
+
+app.listen(3000, function () {
+    console.log('Started');
+})
