@@ -1,7 +1,7 @@
 var request = require("request");
 var cheerio = require("cheerio");
-var iconv = require('iconv').Iconv;
-var iconv_lite = require('iconv-lite');
+//npm install felixge/node-mysql
+var mysql = require('mysql');
 
 
 function buildHtml(body) {
@@ -32,14 +32,39 @@ function show(callback) {
             callback(err, null);
         }
         else {
-            var str = body.replace(/\s/g,'');
+            var str = body.replace(/\s/g, '');
             //var str = 'js_temp_graph date black">3<"temp" span>+16< dqwd w43 r2dcrf4 tgjs_temp_graph date black">3<"temp" span>+16<';
             var reg = /js_temp_graph.*?date.*?>(\d{1,2})<.*?"temp".*?span.*?>(.*?)</gmi;
 
             var match;
+            var connection = mysql.createConnection({
+                host: 'localhost',
+                user: 'root',
+                password: 'root',
+                database: 'weatherdb'
+            });
+
+            connection.connect(function (err) {
+                if (err) {
+                    console.log('Error connecting to Db');
+                    return;
+                }
+                console.log('Connection established');
+            });
+
+            connection.query('select * from weather', function (err, rows, fields) {
+                var superString = "<table><tr><th>month</th><th>day</th><th>temperature</th></tr>";
+                rows.forEach(function (row) {
+                    superString += "<tr><td>" + row.monthNumber + "</td><td> " + row.dayNumber + "</td><td> " + row.temperature + "</td></tr>";
+                });
+                superString += "</table>";
+                console.log(superString);
+                callback(null, superString);
+            });
+            connection.end();
 
             while ((match = reg.exec(str)) !== null) {
-                console.log(match[1]+" "+match[2]+"\n");
+                console.log(match[1] + " " + match[2] + "\n");
             }
             //console.log(body);
             //var iconvObj = new Iconv('windows-1251', 'UTF-8');
@@ -59,7 +84,7 @@ function show(callback) {
             //dayWeather.push({
             //});
 
-            callback(null,body);
+            //callback(null, body);
         }
     });
 }
