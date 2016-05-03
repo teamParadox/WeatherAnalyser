@@ -1,9 +1,9 @@
 var express = require('express');
 var app = express();
-var parser = require('parser');
+var parser = require('./parser');
 
 app.get('/', function (req, res) {
-    parser.updateInformation();
+    parser.updateInformation(res);
     res.send('Reading data complete!');
 });
 
