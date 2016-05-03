@@ -11,6 +11,7 @@ function Wheather(dayNumber, daySymbol, dayTemp, nightTemp) {
 function show(callback) {
     var conf = {
         url: "http://6.pogoda.by/26825",
+        encoding: "windows-1251"
     };
     request(conf, function (err, res, body) {
         if (err) {
